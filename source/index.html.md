@@ -171,13 +171,24 @@ This endpoint retrieves a specific transaction.
 ### HTTP Request
 
 `GET https://api.kontist.com/api/accounts/{account_id}/transactions/{transaction_id}`
+# SEPA Credit Transfers
 
-## SEPA credit transfers Creation
-
-The creation od a SEPA credit transfer (wire transfer) is a 2-step process, divided into 2 requests
+The flow of  SEPA credit transfers (wire transfers) is a 2-step process, divided into 2 requests
 
 1. Registration of all transaction-relevant data and requesting a TAN
 2. Confirmation of the previously registered credit transfer with the received TAN
+
+## SEPA Credit Transfers Creation
+
+In order to create a credit transfer you need at least the following data
+
+Parameter | Mandatory | Description
+--------- | ------- | -----------
+recipient | yes | The name of the recipient
+iban|yes|Recipient's IBAN
+amount|yes|The transaction amount in Euro-Cents
+note|yes|The booking text which will appear on sender's and recipient's bank statements
+e2eId|no|An optional end-to-end ID such as an invoice ID or booking reference
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/"
