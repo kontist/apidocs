@@ -33,6 +33,12 @@ The Bank account endpoint returns all customer owned bank accounts including the
 
 ## Get All Bank Accounts
 
+All customers can have various bank accounts, however most of them will only have one.
+
+<aside class="notice">
+When parsing the API result, please do not forget that you will receive a list of accounts.
+</aside>
+
 ```shell
 curl "https://api.kontist.com/api/accounts/"
   -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
@@ -127,110 +133,121 @@ Parameter | Default | Description
 page | 1 | If set, then indicating the page of the result
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember - the amount will never be returned as negative . You will have to also check whether the <code>from</code> (outgoing transaction) or <code>to</code> (incoming transaction) field contains the current account ID.
 </aside>
 
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Get a Specific Transaction
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "id": 905800,
+  "from": 4711,
+  "to": null,
+  "amount": 50433,
+  "type": null,
+  "category": null,
+  "name": "Karl Lagerfeld",
+  "iban": "DE35120300001012765235",
+  "purpose": "E-16ab84e3177fdb4f692e02fd5b8ce808",
+  "e2e_id": "E-16ab84e3177fdb4f692e02fd5b8ce808",
+  "booking_date": "2018-08-06T22:00:00+00:00",
+  "valuta_date": "2018-08-06T22:00:00+00:00",
+  "booking_type": "SEPA_CREDIT_TRANSFER",
+  "original_amount": null,
+  "foreign_currency": null,
+  "paymentMethod": "bank_account"
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint retrieves a specific transaction.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET https://api.kontist.com/api/accounts/{account_id}/transactions/{transaction_id}`
 
-### URL Parameters
+## SEPA credit transfers Creation
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+The creation od a SEPA credit transfer (wire transfer) is a 2-step process, divided into 2 requests
 
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+1. Registration of all transaction-relevant data and requesting a TAN
+2. Confirmation of the previously registered credit transfer with the received TAN
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+curl "https://api.kontist.com/api/accounts/4711/"
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -X POST
+  -D "{
+  		"recipient": "Karl Brenner",
+  		"iban": "DE89370400440532013000",
+  		"amount": 1250,
+  		"note": "Thank you for paying my lunch",
+  		"e2eId": null
+	}"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+    "status": "confirmation_required",
+    "recipient": "Karl Brenner",
+    "iban": "DE89370400440532013000",
+    "amount": 1,
+    "note": "Thank you for paying my lunch",
+    "meta": {
+        "authorizationTokenLength": 6
+    },
+    "links": {
+        "self": "/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
+    }
 }
 ```
 
-This endpoint deletes a specific kitten.
+## SEPA credit transfers Confirmation
 
-### HTTP Request
+As you have noticed, the status of the newly created SEPA credit  transfer is being returned as `confirmation_required` therefore you now need to confirm it with the TAN received on your registered mobile phone number.
 
-`DELETE http://example.com/kittens/<ID>`
+<aside class="notice">
+In addition to the TAN, refered to as <code>authorizationToken</code>, you are required to provide the exact same payload which you provided when requesting the TAN.
+</aside>
 
-### URL Parameters
+```shell
+curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -X PUT
+  -D "{
+  		"recipient": "Karl Brenner",
+  		"iban": "DE89370400440532013000",
+  		"amount": 1250,
+  		"note": "Thank you for paying my lunch",
+  		"e2eId": null,
+  		"authorizationToken": "012345"
+	}"
+```
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "accepted",
+    "recipient": "Karl Brenner",
+    "iban": "DE89370400440532013000",
+    "amount": 1250,
+    "note": "Thank you for paying my lunch",
+    "meta": {
+        "authorizationTokenLength": 6
+    },
+    "links": {
+        "self": "/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
+    }
+}
+```
+
 
