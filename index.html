@@ -201,7 +201,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -212,9 +212,6 @@
       <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -228,16 +225,32 @@
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
           </li>
           <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
+            <a href="#bank-accounts" class="toc-h1 toc-link" data-title="Bank Accounts">Bank Accounts</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Get All Kittens">Get All Kittens</a>
+                    <a href="#get-all-bank-accounts" class="toc-h2 toc-link" data-title="Get All Bank Accounts">Get All Bank Accounts</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#transactions" class="toc-h1 toc-link" data-title="Transactions">Transactions</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-all-transactions" class="toc-h2 toc-link" data-title="Get All Transactions">Get All Transactions</a>
                   </li>
                   <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Get a Specific Kitten">Get a Specific Kitten</a>
+                    <a href="#get-a-specific-transaction" class="toc-h2 toc-link" data-title="Get a Specific Transaction">Get a Specific Transaction</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#sepa-credit-transfers" class="toc-h1 toc-link" data-title="SEPA Credit Transfers">SEPA Credit Transfers</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#sepa-credit-transfers-creation" class="toc-h2 toc-link" data-title="SEPA Credit Transfers Creation">SEPA Credit Transfers Creation</a>
                   </li>
                   <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Delete a Specific Kitten">Delete a Specific Kitten</a>
+                    <a href="#sepa-credit-transfers-confirmation" class="toc-h2 toc-link" data-title="SEPA credit transfers Confirmation">SEPA credit transfers Confirmation</a>
                   </li>
               </ul>
           </li>
@@ -246,87 +259,105 @@
           </li>
       </ul>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/lord/slate'>Documentation Powered by Slate</a></li>
+            <li><a href='https://app.kontist.com/signup/index.html?pid=apidoc'>Sign Up for a Kontist Account</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/lord/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
+<p>Welcome to the Kontist API. Kontist allows you to access your own bank transaction data as well as the initiation and authentication of financial transactions. Please note, that you will still need to confirm the latter with an individual authorization code which you will receive through SMS.</p>
 <h1 id='authentication'>Authentication</h1>
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>You can start playing with the Kontist API using <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Auth</a>. However this is not to be used in production as it is highly rate limited. The documentation of our oAuth flow is in preparation and will be added at a later point in time. </p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code>Authorization: meowmeowmeow</code></p>
+<p><code>Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l</code></p>
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded representation of <code>your_username:your_password</code>.
 </aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h1 id='bank-accounts'>Bank Accounts</h1>
+<p>The Bank account endpoint returns all customer owned bank accounts including their balances</p>
+<h2 id='get-all-bank-accounts'>Get All Bank Accounts</h2>
+<p>All customers can have various bank accounts, however most of them will only have one.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
+<aside class="notice">
+When parsing the API result, please do not forget that you will receive a list of accounts.
+</aside>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/"</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE06110101001000004444"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"bankName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"solarisBank"</span><span class="w">
+        </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mi">17325</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
+</span></code></pre><h1 id='transactions'>Transactions</h1>
+<p>The transactions endpoint allows you to fetch all of your booked and unbooked banking transactions. These include, but are not limited to the following types</p>
+
+<ul>
+<li>SEPA_CREDIT_TRANSFER</li>
+<li>SEPA_DIRECT_DEBIT</li>
+<li>DIRECT_DEBIT</li>
+<li>SEPA_DIRECT_DEBIT_RETURN</li>
+</ul>
+<h2 id='get-all-transactions'>Get All Transactions</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transactions/"</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transactions?page=2"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">912182</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">659</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"category"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Vae Zrniv4chmon1; St Louis; Fr"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"e2e_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"booking_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-08T16:26:52+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"valuta_date"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"booking_type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"original_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"760"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"foreign_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHF"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"credit_card"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">905800</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">50433</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"category"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Lagerfeld"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE35120300001012765235"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"e2e_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"booking_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"valuta_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"booking_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SEPA_CREDIT_TRANSFER"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"original_amount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"foreign_currency"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bank_account"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves all kittens.</p>
+<p>This endpoint retrieves all transactions of the authenticated user.</p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
+<p><code>GET https://api.kontist.com/api/accounts/{accpunt_id}/transactions</code></p>
 <h3 id='query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
@@ -336,103 +367,148 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
-</tr>
-<tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>page</td>
+<td>1</td>
+<td>If set, then indicating the page of the result</td>
 </tr>
 </tbody></table>
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember - the amount will never be returned as negative . You will have to also check whether the <code>from</code> (outgoing transaction) or <code>to</code> (incoming transaction) field contains the current account ID.
 </aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<h2 id='get-a-specific-transaction'>Get a Specific Transaction</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transactions/905800"</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">905800</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">50433</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"category"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Lagerfeld"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE35120300001012765235"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"e2e_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"booking_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"valuta_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"booking_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SEPA_CREDIT_TRANSFER"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"original_amount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"foreign_currency"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bank_account"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<p>This endpoint retrieves a specific transaction.</p>
 <h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
+<p><code>GET https://api.kontist.com/api/accounts/{account_id}/transactions/{transaction_id}</code></p>
+<h1 id='sepa-credit-transfers'>SEPA Credit Transfers</h1>
+<p>The flow of  SEPA credit transfers (wire transfers) is a 2-step process, divided into 2 requests</p>
+
+<ol>
+<li>Registration of all transaction-relevant data and requesting a TAN</li>
+<li>Confirmation of the previously registered credit transfer with the received TAN</li>
+</ol>
+<h2 id='sepa-credit-transfers-creation'>SEPA Credit Transfers Creation</h2>
+<p>In order to create a credit transfer you need at least the following data</p>
+
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Mandatory</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>recipient</td>
+<td>yes</td>
+<td>The name of the recipient</td>
+</tr>
+<tr>
+<td>iban</td>
+<td>yes</td>
+<td>Recipient&#39;s IBAN</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>yes</td>
+<td>The transaction amount in Euro-Cents</td>
+</tr>
+<tr>
+<td>note</td>
+<td>yes</td>
+<td>The booking text which will appear on sender&#39;s and recipient&#39;s bank statements</td>
+</tr>
+<tr>
+<td>e2eId</td>
+<td>no</td>
+<td>An optional end-to-end ID such as an invoice ID or booking reference</td>
 </tr>
 </tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -X DELETE
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/"</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
+  -X POST
+  -D <span class="s2">"{
+        "</span>recipient<span class="s2">": "</span>Karl Brenner<span class="s2">",
+        "</span>iban<span class="s2">": "</span>DE89370400440532013000<span class="s2">",
+        "</span>amount<span class="s2">": 1250,
+        "</span>note<span class="s2">": "</span>Thank you <span class="k">for </span>paying my lunch<span class="s2">",
+        "</span>e2eId<span class="s2">": null
+    }"</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmation_required"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Brenner"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE89370400440532013000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for paying my lunch"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"authorizationTokenLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint deletes a specific kitten.</p>
-<h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
-</tr>
-</tbody></table>
-<h1 id='errors'>Errors</h1>
+</span></code></pre><h2 id='sepa-credit-transfers-confirmation'>SEPA credit transfers Confirmation</h2>
+<p>As you have noticed, the status of the newly created SEPA credit  transfer is being returned as <code>confirmation_required</code> therefore you now need to confirm it with the TAN received on your registered mobile phone number.</p>
+
+<aside class="notice">
+In addition to the TAN, refered to as <code>authorizationToken</code>, you are required to provide the exact same payload which you provided when requesting the TAN.
+</aside>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
+  -X PUT
+  -D <span class="s2">"{
+        "</span>recipient<span class="s2">": "</span>Karl Brenner<span class="s2">",
+        "</span>iban<span class="s2">": "</span>DE89370400440532013000<span class="s2">",
+        "</span>amount<span class="s2">": 1250,
+        "</span>note<span class="s2">": "</span>Thank you <span class="k">for </span>paying my lunch<span class="s2">",
+        "</span>e2eId<span class="s2">": null,
+        "</span>authorizationToken<span class="s2">": "</span>012345<span class="s2">"
+    }"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Brenner"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE89370400440532013000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1250</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for paying my lunch"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"authorizationTokenLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
 </aside>
@@ -495,9 +571,6 @@ This error section is stored in a separate file in <code>includes/_errors.md</co
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
           </div>
       </div>
     </div>
