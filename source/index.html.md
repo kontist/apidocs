@@ -35,8 +35,10 @@ The Bank account endpoint returns all customer owned bank accounts including the
 
 All customers can have various bank accounts, however most of them will only have one.
 
+*When parsing the API result, please do not forget that you will receive a list of accounts.*
+
 <aside class="notice">
-When parsing the API result, please do not forget that you will receive a list of accounts.
+  The `accountType` property is going to be deprecated in the near future, please make sure your client is not relying on that.
 </aside>
 
 ```shell
@@ -51,8 +53,8 @@ curl "https://api.kontist.com/api/accounts/"
     {
         "id": 4711,
         "iban": "DE06110101001000004444",
-        "bankName": "solarisBank"
-        "balance": 17325
+        "balance": 17325,
+        "accountType": "solaris"
     }
 ]
 ```
