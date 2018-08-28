@@ -130,7 +130,7 @@ This endpoint retrieves all transactions of the authenticated user.
 
 ### HTTP Request
 
-`GET https://api.kontist.com/api/accounts/{accpunt_id}/transactions`
+`GET https://api.kontist.com/api/accounts/{account_id}/transactions`
 
 ### Query Parameters
 
@@ -244,7 +244,7 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
   -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l' \
   -H 'Content-Type: application/json' \
-  -X PUT
+  -X PUT \
   -d '{
   		"recipient": "Karl Brenner",
   		"iban": "DE89370400440532013000",
