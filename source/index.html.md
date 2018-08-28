@@ -241,7 +241,7 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 </aside>
 
 ```shell
-curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
+curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx" \
   -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l' \
   -H 'Content-Type: application/json' \
   -X PUT \
