@@ -201,16 +201,17 @@ note|yes|The booking text which will appear on sender's and recipient's bank sta
 e2eId|no|An optional end-to-end ID such as an invoice ID or booking reference
 
 ```shell
-curl "https://api.kontist.com/api/accounts/4711/"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
-  -X POST
-  -D "{
-  		"recipient": "Karl Brenner",
-  		"iban": "DE89370400440532013000",
-  		"amount": 1250,
-  		"note": "Thank you for paying my lunch",
-  		"e2eId": null
-	}"
+curl "https://api.kontist.com/api/accounts/4711/transfer" \
+  -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l' \
+  -H 'Content-Type: application/json' \
+  -X POST \
+  -d '{
+        "recipient": "Karl Brenner",
+        "iban": "DE89370400440532013000",
+        "amount": 1250,
+        "note": "Thank you for paying my lunch",
+        "e2eId": null
+      }'
 ```
 
 > The above command returns JSON structured like this:
@@ -241,16 +242,17 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l' \
+  -H 'Content-Type: application/json' \
   -X PUT
-  -D "{
+  -d '{
   		"recipient": "Karl Brenner",
   		"iban": "DE89370400440532013000",
   		"amount": 1250,
   		"note": "Thank you for paying my lunch",
   		"e2eId": null,
   		"authorizationToken": "012345"
-	}"
+	}'
 ```
 
 > The above command returns JSON structured like this:
