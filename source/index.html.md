@@ -70,6 +70,10 @@ The transactions endpoint allows you to fetch all of your booked and unbooked ba
 
 ## Get All Transactions
 
+<aside class="notice">
+  The `to` property is going to be deprecated in the near future, please make sure your client is not relying on that.
+</aside>
+
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/"
   -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
@@ -139,6 +143,10 @@ Remember - the amount will never be returned as negative . You will have to also
 </aside>
 
 ## Get a Specific Transaction
+
+<aside class="notice">
+  The `to` property is going to be deprecated in the near future, please make sure your client is not relying on that.
+</aside>
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
