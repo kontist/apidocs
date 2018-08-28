@@ -202,8 +202,8 @@ e2eId|no|An optional end-to-end ID such as an invoice ID or booking reference
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer" \
-  -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l' \
-  -H 'Content-Type: application/json' \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
   -X POST \
   -d '{
         "recipient": "Karl Brenner",
@@ -242,8 +242,8 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx" \
-  -H 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l' \
-  -H 'Content-Type: application/json' \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
   -X PUT \
   -d '{
   		"recipient": "Karl Brenner",
