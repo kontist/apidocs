@@ -167,6 +167,7 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
 {
   "id": 905800,
   "from": 4711,
+  "to": null,
   "amount": 50433,
   "type": null,
   "category": null,
