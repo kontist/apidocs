@@ -77,6 +77,7 @@ The transactions endpoint allows you to fetch all of your booked and unbooked ba
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/"
   -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Accept: application/vnd.kontist.transactionlist.v2.1+json"
 ```
 
 > The above command returns JSON structured like this:
@@ -135,6 +136,7 @@ This endpoint retrieves all transactions of the authenticated user.
 ### HTTP Request
 
 `GET https://api.kontist.com/api/accounts/{account_id}/transactions`
+`Header: { Accept: "application/vnd.kontist.transactionlist.v2.1+json" }`
 
 ### Query Parameters
 
