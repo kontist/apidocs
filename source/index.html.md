@@ -104,7 +104,8 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/"
       "paymentMethod": "credit_card",
       "invoiceNumber": 12,
       "invoicePreviewUrl": "https:",
-      "invoiceDownloadUrl": "https:"
+      "invoiceDownloadUrl": "https:",
+      "mandateNumber": null
     },
     {
       "id": 905800,
@@ -123,7 +124,8 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/"
       "paymentMethod": "bank_account",
       "invoiceNumber": null,
       "invoicePreviewUrl": null,
-      "invoiceDownloadUrl": null
+      "invoiceDownloadUrl": null,
+      "mandateNumber": null
     }
   ]
 }
@@ -177,7 +179,8 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
   "paymentMethod": "bank_account",
   "invoiceNumber": 12,
   "invoicePreviewUrl": "https:",
-  "invoiceDownloadUrl": "https:"
+  "invoiceDownloadUrl": "https:",
+  "mandateNumber": null
 }
 ```
 
