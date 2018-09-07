@@ -77,6 +77,7 @@ The transactions endpoint allows you to fetch all of your booked and unbooked ba
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/"
   -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Accept: application/vnd.kontist.transactionlist.v2.1+json"
 ```
 
 > The above command returns JSON structured like this:
@@ -88,39 +89,43 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/"
   "results": [
     {
       "id": 912182,
-      "from": 4711,
-      "to": null,
       "amount": 659,
       "type": null,
       "category": null,
       "name": "Vae Zrniv4chmon1; St Louis; Fr",
       "iban": null,
       "purpose": null,
-      "e2e_id": null,
-      "booking_date": "2018-08-08T16:26:52+00:00",
-      "valuta_date": null,
-      "booking_type": null,
-      "original_amount": "760",
-      "foreign_currency": "CHF",
-      "paymentMethod": "credit_card"
+      "e2eId": null,
+      "bookingDate": "2018-08-08T16:26:52+00:00",
+      "valutaDate": null,
+      "bookingType": null,
+      "originalAmount": "760",
+      "foreignCurrency": "CHF",
+      "paymentMethod": "credit_card",
+      "invoiceNumber": 12,
+      "invoicePreviewUrl": "https:",
+      "invoiceDownloadUrl": "https:",
+      "mandateNumber": null
     },
     {
       "id": 905800,
-      "from": 4711,
-      "to": null,
-      "amount": 50433,
+      "amount": -50433,
       "type": null,
       "category": null,
       "name": "Karl Lagerfeld",
       "iban": "DE35120300001012765235",
       "purpose": "E-16ab84e3177fdb4f692e02fd5b8ce808",
-      "e2e_id": "E-16ab84e3177fdb4f692e02fd5b8ce808",
-      "booking_date": "2018-08-06T22:00:00+00:00",
-      "valuta_date": "2018-08-06T22:00:00+00:00",
-      "booking_type": "SEPA_CREDIT_TRANSFER",
-      "original_amount": null,
-      "foreign_currency": null,
-      "paymentMethod": "bank_account"
+      "e2eId": "E-16ab84e3177fdb4f692e02fd5b8ce808",
+      "bookingDate": "2018-08-06T22:00:00+00:00",
+      "valutaDate": "2018-08-06T22:00:00+00:00",
+      "bookingType": "SEPA_CREDIT_TRANSFER",
+      "originalAmount": null,
+      "foreignCurrency": null,
+      "paymentMethod": "bank_account",
+      "invoiceNumber": null,
+      "invoicePreviewUrl": null,
+      "invoiceDownloadUrl": null,
+      "mandateNumber": null
     }
   ]
 }
@@ -131,6 +136,7 @@ This endpoint retrieves all transactions of the authenticated user.
 ### HTTP Request
 
 `GET https://api.kontist.com/api/accounts/{account_id}/transactions`
+`Header: { Accept: "application/vnd.kontist.transactionlist.v2.1+json" }`
 
 ### Query Parameters
 
@@ -158,21 +164,23 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
 ```json
 {
   "id": 905800,
-  "from": 4711,
-  "to": null,
   "amount": 50433,
   "type": null,
   "category": null,
   "name": "Karl Lagerfeld",
   "iban": "DE35120300001012765235",
   "purpose": "E-16ab84e3177fdb4f692e02fd5b8ce808",
-  "e2e_id": "E-16ab84e3177fdb4f692e02fd5b8ce808",
-  "booking_date": "2018-08-06T22:00:00+00:00",
-  "valuta_date": "2018-08-06T22:00:00+00:00",
-  "booking_type": "SEPA_CREDIT_TRANSFER",
-  "original_amount": null,
-  "foreign_currency": null,
-  "paymentMethod": "bank_account"
+  "e2eId": "E-16ab84e3177fdb4f692e02fd5b8ce808",
+  "bookingDate": "2018-08-06T22:00:00+00:00",
+  "valutaDate": "2018-08-06T22:00:00+00:00",
+  "bookingType": "SEPA_CREDIT_TRANSFER",
+  "originalAmount": null,
+  "foreignCurrency": null,
+  "paymentMethod": "bank_account",
+  "invoiceNumber": 12,
+  "invoicePreviewUrl": "https:",
+  "invoiceDownloadUrl": "https:",
+  "mandateNumber": null
 }
 ```
 
