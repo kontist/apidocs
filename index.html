@@ -280,8 +280,10 @@ You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded rep
 <h2 id='get-all-bank-accounts'>Get All Bank Accounts</h2>
 <p>All customers can have various bank accounts, however most of them will only have one.</p>
 
+<p><em>When parsing the API result, please do not forget that you will receive a list of accounts.</em></p>
+
 <aside class="notice">
-When parsing the API result, please do not forget that you will receive a list of accounts.
+  The `accountType` property is going to be deprecated in the near future, please make sure your client is not relying on that.
 </aside>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/"</span>
   -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
@@ -293,8 +295,8 @@ When parsing the API result, please do not forget that you will receive a list o
     </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
         </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE06110101001000004444"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"bankName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"solarisBank"</span><span class="w">
-        </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mi">17325</span><span class="w">
+        </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mi">17325</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"accountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"solaris"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre><h1 id='transactions'>Transactions</h1>
@@ -306,8 +308,13 @@ When parsing the API result, please do not forget that you will receive a list o
 <li>DIRECT_DEBIT</li>
 <li>SEPA_DIRECT_DEBIT_RETURN</li>
 </ul>
-<h2 id='get-all-transactions'>Get All Transactions</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transactions/"</span>
+<h2 id='get-all-transactions'>Get All Transactions</h2>
+<aside class="notice">
+  The `to` property is going to be deprecated in the near future, please make sure your client is not relying on that.
+</aside>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transactions/"</span>
   -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
+  -H <span class="s2">"Accept: application/vnd.kontist.transactionlist.v2.1+json"</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
@@ -318,46 +325,51 @@ When parsing the API result, please do not forget that you will receive a list o
   </span><span class="s2">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">912182</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">659</span><span class="p">,</span><span class="w">
       </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"category"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Vae Zrniv4chmon1; St Louis; Fr"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"e2e_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"booking_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-08T16:26:52+00:00"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"valuta_date"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"booking_type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"original_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"760"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"foreign_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHF"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"credit_card"</span><span class="w">
+      </span><span class="s2">"e2eId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"bookingDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-08T16:26:52+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"valutaDate"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"bookingType"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"originalAmount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"760"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"foreignCurrency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHF"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"credit_card"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invoiceNumber"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invoicePreviewUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https:"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invoiceDownloadUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https:"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"mandateNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">905800</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">50433</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">-50433</span><span class="p">,</span><span class="w">
       </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"category"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Lagerfeld"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE35120300001012765235"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"e2e_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"booking_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"valuta_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"booking_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SEPA_CREDIT_TRANSFER"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"original_amount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"foreign_currency"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bank_account"</span><span class="w">
+      </span><span class="s2">"e2eId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"bookingDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"valutaDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"bookingType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SEPA_CREDIT_TRANSFER"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"originalAmount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"foreignCurrency"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bank_account"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invoiceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invoicePreviewUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invoiceDownloadUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"mandateNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>This endpoint retrieves all transactions of the authenticated user.</p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>GET https://api.kontist.com/api/accounts/{accpunt_id}/transactions</code></p>
+<p><code>GET https://api.kontist.com/api/accounts/{account_id}/transactions</code>
+<code>Header: { Accept: &quot;application/vnd.kontist.transactionlist.v2.1+json&quot; }</code></p>
 <h3 id='query-parameters'>Query Parameters</h3>
 <table><thead>
 <tr>
@@ -376,7 +388,11 @@ When parsing the API result, please do not forget that you will receive a list o
 <aside class="success">
 Remember - the amount will never be returned as negative . You will have to also check whether the <code>from</code> (outgoing transaction) or <code>to</code> (incoming transaction) field contains the current account ID.
 </aside>
-<h2 id='get-a-specific-transaction'>Get a Specific Transaction</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transactions/905800"</span>
+<h2 id='get-a-specific-transaction'>Get a Specific Transaction</h2>
+<aside class="notice">
+  The `to` property is going to be deprecated in the near future, please make sure your client is not relying on that.
+</aside>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transactions/905800"</span>
   -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
 </code></pre>
 <blockquote>
@@ -384,21 +400,23 @@ Remember - the amount will never be returned as negative . You will have to also
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">905800</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">50433</span><span class="p">,</span><span class="w">
   </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="s2">"category"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Lagerfeld"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE35120300001012765235"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"e2e_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"booking_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"valuta_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"booking_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SEPA_CREDIT_TRANSFER"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"original_amount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"foreign_currency"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bank_account"</span><span class="w">
+  </span><span class="s2">"e2eId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-16ab84e3177fdb4f692e02fd5b8ce808"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bookingDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"valutaDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T22:00:00+00:00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bookingType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SEPA_CREDIT_TRANSFER"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"originalAmount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"foreignCurrency"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bank_account"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"invoiceNumber"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"invoicePreviewUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https:"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"invoiceDownloadUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https:"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"mandateNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>This endpoint retrieves a specific transaction.</p>
@@ -447,16 +465,17 @@ Remember - the amount will never be returned as negative . You will have to also
 <td>An optional end-to-end ID such as an invoice ID or booking reference</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/"</span>
-  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
-  -X POST
-  -D <span class="s2">"{
-        "</span>recipient<span class="s2">": "</span>Karl Brenner<span class="s2">",
-        "</span>iban<span class="s2">": "</span>DE89370400440532013000<span class="s2">",
-        "</span>amount<span class="s2">": 1250,
-        "</span>note<span class="s2">": "</span>Thank you <span class="k">for </span>paying my lunch<span class="s2">",
-        "</span>e2eId<span class="s2">": null
-    }"</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transfer"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -d <span class="s1">'{
+        "recipient": "Karl Brenner",
+        "iban": "DE89370400440532013000",
+        "amount": 1250,
+        "note": "Thank you for paying my lunch",
+        "e2eId": null
+      }'</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
@@ -480,17 +499,18 @@ Remember - the amount will never be returned as negative . You will have to also
 <aside class="notice">
 In addition to the TAN, refered to as <code>authorizationToken</code>, you are required to provide the exact same payload which you provided when requesting the TAN.
 </aside>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span>
-  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span>
-  -X PUT
-  -D <span class="s2">"{
-        "</span>recipient<span class="s2">": "</span>Karl Brenner<span class="s2">",
-        "</span>iban<span class="s2">": "</span>DE89370400440532013000<span class="s2">",
-        "</span>amount<span class="s2">": 1250,
-        "</span>note<span class="s2">": "</span>Thank you <span class="k">for </span>paying my lunch<span class="s2">",
-        "</span>e2eId<span class="s2">": null,
-        "</span>authorizationToken<span class="s2">": "</span>012345<span class="s2">"
-    }"</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -X PUT <span class="se">\</span>
+  -d <span class="s1">'{
+        "recipient": "Karl Brenner",
+        "iban": "DE89370400440532013000",
+        "amount": 1250,
+        "note": "Thank you for paying my lunch",
+        "e2eId": null,
+        "authorizationToken": "012345"
+    }'</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
