@@ -105,6 +105,8 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/"
       "invoiceNumber": 12,
       "invoicePreviewUrl": "https:",
       "invoiceDownloadUrl": "https:",
+      "userSelectedBookingDate": null,
+      "documentType": null,
       "mandateNumber": null
     },
     {
@@ -125,6 +127,8 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/"
       "invoiceNumber": null,
       "invoicePreviewUrl": null,
       "invoiceDownloadUrl": null,
+      "userSelectedBookingDate": null,
+      "documentType": null,
       "mandateNumber": null
     }
   ]
@@ -180,6 +184,8 @@ curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
   "invoiceNumber": 12,
   "invoicePreviewUrl": "https:",
   "invoiceDownloadUrl": "https:",
+  "userSelectedBookingDate": null,
+  "documentType": null,
   "mandateNumber": null
 }
 ```
