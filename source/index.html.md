@@ -19,7 +19,7 @@ Welcome to the Kontist API. Kontist allows you to access your own bank transacti
 
 # Authentication
 
-You can start playing with the Kontist API using [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). However this is not to be used in production as it is highly rate limited. The documentation of our oAuth flow is in preparation and will be added at a later point in time. 
+You can start playing with the Kontist API using [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). However this is not to be used in production as it is highly rate limited. The documentation of our oAuth flow is in preparation and will be added at a later point in time.
 
 `Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l`
 
@@ -149,7 +149,7 @@ Parameter | Default | Description
 page | 1 | If set, then indicating the page of the result
 
 <aside class="success">
-Remember - the amount will never be returned as negative . You will have to also check whether the <code>from</code> (outgoing transaction) or <code>to</code> (incoming transaction) field contains the current account ID.
+  Remember - the amount returned will be negative for outgoing transactions.
 </aside>
 
 ## Get a Specific Transaction
