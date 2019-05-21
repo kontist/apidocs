@@ -27,6 +27,83 @@ You can start playing with the Kontist API using [HTTP Basic Auth](https://en.wi
 You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded representation of <code>your_username:your_password</code>.
 </aside>
 
+## JWT auth
+
+You can read more about JWT token auth under [https://jwt.io/introduction](https://jwt.io/introduction).
+
+To start using JWT auth you have to first create refresh token or auth token. Refresh token would be used next to create auth token. Auth token is valid for a specified amount of time. After it expires you should issue new auth token via refresh token.
+
+### Create refresh token
+
+To create refresh token (valid for `30 days`) you would have to use:
+
+```shell
+curl -X POST \
+  https://api.kontist.com/api/user/refresh-token \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "email": "YOUR_EMAIL",
+  "password": "YOUR_PASSWORD"
+}'
+```
+
+If your credentials are valid, you should receive refresh token in JSON response:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjYxYjIyZC01NzRmLTQwOWMtYjRlYy03ZmJhOTQ1ZGYwYjkiLCJzY29wZSI6InJlZnJlc2giLCJpYXQiOjE1NTg0NTM5MzUsImV4cCI6MTU2MTA0NTkzNX0.jXGbFGKxGciGGwNXhgJz6R0nd_swniBHFSOul6V4kjY"
+}
+```
+
+### Create auth token
+
+To create authToken (valid for exactly `1 hour`):
+
+```shell
+curl -X POST \
+  https://api.kontist.com/api/user/auth-token \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "email": "YOUR_EMAIL",
+  "password": "YOUR_PASSWORD"
+}'
+```
+
+### Create auth token using refresh token
+
+You can also create authToken using refresh token:
+
+```shell
+curl -X POST \
+  https://api.kontist.com/api/user/auth-token \
+  -H 'Authorization: Bearer REFRESH_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+It's usable when your access token gets invalid and you would like to get a new one without prompting the user for credentials again.
+
+### Auth token invalidation
+
+If you would like to invalidate token before it expires, you would have to use:
+
+```shell
+curl -X DELETE \
+  https://api.kontist.com/api/user/auth-token \
+  -H 'Authorization: Bearer ACCESS_TOKEN'
+```
+
+### Refresh token invalidation
+
+Same works for refresh token:
+
+```shell
+curl -X DELETE \
+  https://api.kontist.com/api/user/refresh-token \
+  -H 'Authorization: Bearer ACCESS_TOKEN'
+```
+
+You can access Kontist API endpoints by adding `Authorization`: `Bearer AUTH_TOKEN` header to your requests.
+
 # Bank Accounts
 
 The Bank account endpoint returns all customer owned bank accounts including their balances
