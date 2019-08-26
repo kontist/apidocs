@@ -289,7 +289,7 @@ In order to create a credit transfer you need at least the following data
 | recipient | yes       | The name of the recipient                                                      |
 | iban      | yes       | Recipient's IBAN                                                               |
 | amount    | yes       | The transaction amount in Euro-Cents                                           |
-| note      | yes       | The booking text which will appear on sender's and recipient's bank statements |
+| note      | no        | The booking text which will appear on sender's and recipient's bank statements |
 | e2eId     | no        | An optional end-to-end ID such as an invoice ID or booking reference           |
 
 ```shell
