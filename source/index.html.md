@@ -112,7 +112,7 @@ The Bank account endpoint returns all customer owned bank accounts including the
 
 All customers can have various bank accounts, however most of them will only have one.
 
-*When parsing the API result, please do not forget that you will receive a list of accounts.*
+_When parsing the API result, please do not forget that you will receive a list of accounts._
 
 <aside class="notice">
   The `accountType` property is going to be deprecated in the near future, please make sure your client is not relying on that.
@@ -127,12 +127,12 @@ curl "https://api.kontist.com/api/accounts/"
 
 ```json
 [
-    {
-        "id": 4711,
-        "iban": "DE06110101001000004444",
-        "balance": 17325,
-        "accountType": "solaris"
-    }
+  {
+    "id": 4711,
+    "iban": "DE06110101001000004444",
+    "balance": 17325,
+    "accountType": "solaris"
+  }
 ]
 ```
 
@@ -140,10 +140,10 @@ curl "https://api.kontist.com/api/accounts/"
 
 The transactions endpoint allows you to fetch all of your booked and unbooked banking transactions. These include, but are not limited to the following types
 
-* SEPA_CREDIT_TRANSFER
-* SEPA_DIRECT_DEBIT
-* DIRECT_DEBIT
-* SEPA_DIRECT_DEBIT_RETURN
+- SEPA_CREDIT_TRANSFER
+- SEPA_DIRECT_DEBIT
+- DIRECT_DEBIT
+- SEPA_DIRECT_DEBIT_RETURN
 
 ## Get All Transactions
 
@@ -221,9 +221,9 @@ This endpoint retrieves all transactions of the authenticated user.
 
 ### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-page | 1 | If set, then indicating the page of the result
+| Parameter | Default | Description                                    |
+| --------- | ------- | ---------------------------------------------- |
+| page      | 1       | If set, then indicating the page of the result |
 
 <aside class="success">
   Remember - the amount returned will be negative for outgoing transactions.
@@ -272,9 +272,10 @@ This endpoint retrieves a specific transaction.
 ### HTTP Request
 
 `GET https://api.kontist.com/api/accounts/{account_id}/transactions/{transaction_id}`
+
 # SEPA Credit Transfers
 
-The flow of  SEPA credit transfers (wire transfers) is a 2-step process, divided into 2 requests
+The flow of SEPA credit transfers (wire transfers) is a 2-step process, divided into 2 requests
 
 1. Registration of all transaction-relevant data and requesting a TAN
 2. Confirmation of the previously registered credit transfer with the received TAN
@@ -283,13 +284,13 @@ The flow of  SEPA credit transfers (wire transfers) is a 2-step process, divided
 
 In order to create a credit transfer you need at least the following data
 
-Parameter | Mandatory | Description
---------- | ------- | -----------
-recipient | yes | The name of the recipient
-iban|yes|Recipient's IBAN
-amount|yes|The transaction amount in Euro-Cents
-note|yes|The booking text which will appear on sender's and recipient's bank statements
-e2eId|no|An optional end-to-end ID such as an invoice ID or booking reference
+| Parameter | Mandatory | Description                                                                    |
+| --------- | --------- | ------------------------------------------------------------------------------ |
+| recipient | yes       | The name of the recipient                                                      |
+| iban      | yes       | Recipient's IBAN                                                               |
+| amount    | yes       | The transaction amount in Euro-Cents                                           |
+| note      | yes       | The booking text which will appear on sender's and recipient's bank statements |
+| e2eId     | no        | An optional end-to-end ID such as an invoice ID or booking reference           |
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer" \
@@ -309,23 +310,23 @@ curl "https://api.kontist.com/api/accounts/4711/transfer" \
 
 ```json
 {
-    "status": "confirmation_required",
-    "recipient": "Karl Brenner",
-    "iban": "DE89370400440532013000",
-    "amount": 1,
-    "note": "Thank you for paying my lunch",
-    "meta": {
-        "authorizationTokenLength": 6
-    },
-    "links": {
-        "self": "/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
-    }
+  "status": "confirmation_required",
+  "recipient": "Karl Brenner",
+  "iban": "DE89370400440532013000",
+  "amount": 1,
+  "note": "Thank you for paying my lunch",
+  "meta": {
+    "authorizationTokenLength": 6
+  },
+  "links": {
+    "self": "/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
+  }
 }
 ```
 
 ## SEPA credit transfers Confirmation
 
-As you have noticed, the status of the newly created SEPA credit  transfer is being returned as `confirmation_required` therefore you now need to confirm it with the TAN received on your registered mobile phone number.
+As you have noticed, the status of the newly created SEPA credit transfer is being returned as `confirmation_required` therefore you now need to confirm it with the TAN received on your registered mobile phone number.
 
 <aside class="notice">
 In addition to the TAN, refered to as <code>authorizationToken</code>, you are required to provide the exact same payload which you provided when requesting the TAN.
@@ -350,18 +351,178 @@ curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd5
 
 ```json
 {
-    "status": "accepted",
-    "recipient": "Karl Brenner",
-    "iban": "DE89370400440532013000",
-    "amount": 1250,
-    "note": "Thank you for paying my lunch",
-    "meta": {
-        "authorizationTokenLength": 6
-    },
-    "links": {
-        "self": "/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
-    }
+  "status": "accepted",
+  "recipient": "Karl Brenner",
+  "iban": "DE89370400440532013000",
+  "amount": 1250,
+  "note": "Thank you for paying my lunch",
+  "meta": {
+    "authorizationTokenLength": 6
+  },
+  "links": {
+    "self": "/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"
+  }
 }
 ```
 
+# Timed orders
 
+A timed order is a regular SEPA Credit Transfer which is pre-authorized to be executed once at a specific date.
+
+The flow of timed orders is a 2-step process, divided into 2 requests:
+
+1. Registration of all transaction-relevant data and requesting a TAN
+2. Confirmation of the previously registered transfer with the received TAN
+
+## Timed order creation
+
+In order to create a timed order you need at least the following data
+
+| Parameter | Mandatory | Description                                                                    |
+| --------- | --------- | ------------------------------------------------------------------------------ |
+| recipient | yes       | The name of the recipient                                                      |
+| iban      | yes       | Recipient's IBAN                                                               |
+| amount    | yes       | The transaction amount in Euro-Cents                                           |
+| date      | yes       | The transaction execution time                                                 |
+| note      | no        | The booking text which will appear on sender's and recipient's bank statements |
+| e2eId     | no        | An optional end-to-end ID such as an invoice ID or booking reference           |
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/timed-orders" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "recipient": "John Smith",
+    "iban": "DE33100110012626008537",
+    "amount": 12012,
+    "note": "Bill payment",
+    "e2eId": null,
+    "date": "2019-08-27T14:32:08.604Z"
+  }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "9939482a-b1a2-4cff-8b48-ae340e398659",
+  "execute_at": "2019-08-27T12:00:00.000Z",
+  "executed_at": null,
+  "status": "CONFIRMATION_REQUIRED",
+  "scheduled_transaction": {
+    "id": "04775196-a148-45ca-8f59-e3bb260a3f38",
+    "status": "scheduled",
+    "reference": "R-0230af41c289989f97715193772e229f",
+    "description": "Bill payment",
+    "recipient_iban": "DE33100110012626008537",
+    "recipient_name": "John Smith",
+    "recipient_bic": "",
+    "end_to_end_id": "E-0230af41c289989f97715193772e229f",
+    "batch_id": null,
+    "created_at": "2019-08-26T14:32:11.426Z",
+    "amount": { "value": 12012, "currency": "EUR", "unit": "cents" }
+  }
+}
+```
+
+## Timed order confirmation
+
+As you have noticed, the status of the newly created SEPA credit transfer is being returned as `CONFIRMATION_REQUIRED` therefore you now need to confirm it with the TAN received on your registered mobile phone number.
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/confirm" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{ "token":"931434" }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "9939482a-b1a2-4cff-8b48-ae340e398659",
+  "execute_at": "2019-08-27T12:00:00.000Z",
+  "executed_at": null,
+  "status": "SCHEDULED",
+  "scheduled_transaction": {
+    "id": "04775196-a148-45ca-8f59-e3bb260a3f38",
+    "status": "scheduled",
+    "reference": "R-0230af41c289989f97715193772e229f",
+    "description": "Bill payment",
+    "recipient_iban": "DE33100110012626008537",
+    "recipient_name": "John Smith",
+    "recipient_bic": "",
+    "end_to_end_id": "E-0230af41c289989f97715193772e229f",
+    "batch_id": null,
+    "created_at": "2019-08-26T14:32:11.426Z",
+    "amount": { "value": 12012, "currency": "EUR", "unit": "cents" }
+  }
+}
+```
+
+## Timed order cancelation
+
+To cancel timed order in `SCHEDULED` state:
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/cancel" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X PATCH
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "9939482a-b1a2-4cff-8b48-ae340e398659",
+  "execute_at": "2019-08-27T12:00:00.000Z",
+  "executed_at": null,
+  "status": "CANCELED",
+  "scheduled_transaction": {
+    "id": "04775196-a148-45ca-8f59-e3bb260a3f38",
+    "status": "canceled",
+    "reference": "R-496ef67d09d9f725e66810d15336b595",
+    "description": "Bill payment",
+    "recipient_iban": "DE33100110012626008537",
+    "recipient_name": "John Smith",
+    "recipient_bic": "",
+    "end_to_end_id": "E-496ef67d09d9f725e66810d15336b595",
+    "batch_id": null,
+    "created_at": "2019-08-26T14:39:41.699Z",
+    "amount": { "value": 12012, "currency": "EUR", "unit": "cents" }
+  }
+}
+```
+
+Timed order will not be displayed anymore in fetch timed orders response.
+
+## Fetch timed orders
+
+To fetch list of timed order in `SCHEDULED` state:
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/timed-orders" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+    "id": "9939482a-b1a2-4cff-8b48-ae340e398659",
+    "recipientName": "John Smith",
+    "recipientIban": "DE33100110012626008537",
+    "date": "2019-08-27T12:00:00.000Z",
+    "purpose": "Bill payment",
+    "amount": -12012,
+    "e2eId": "E-d447d47fb16d5e0dffe7c7894cc643cf",
+    "status": "scheduled",
+    "type": "TIMED_ORDER"
+  }
+]
+```
