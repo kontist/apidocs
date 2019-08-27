@@ -260,6 +260,23 @@
               </ul>
           </li>
           <li>
+            <a href="#timed-orders" class="toc-h1 toc-link" data-title="Timed orders">Timed orders</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#timed-order-creation" class="toc-h2 toc-link" data-title="Timed order creation">Timed order creation</a>
+                  </li>
+                  <li>
+                    <a href="#timed-order-confirmation" class="toc-h2 toc-link" data-title="Timed order confirmation">Timed order confirmation</a>
+                  </li>
+                  <li>
+                    <a href="#timed-order-cancelation" class="toc-h2 toc-link" data-title="Timed order cancelation">Timed order cancelation</a>
+                  </li>
+                  <li>
+                    <a href="#fetch-timed-orders" class="toc-h2 toc-link" data-title="Fetch timed orders">Fetch timed orders</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
           </li>
       </ul>
@@ -344,12 +361,12 @@ You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded rep
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE06110101001000004444"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mi">17325</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"accountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"solaris"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE06110101001000004444"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mi">17325</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"accountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"solaris"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre><h1 id='transactions'>Transactions</h1>
 <p>The transactions endpoint allows you to fetch all of your booked and unbooked banking transactions. These include, but are not limited to the following types</p>
@@ -481,7 +498,7 @@ You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded rep
 <h3 id='http-request-2'>HTTP Request</h3>
 <p><code>GET https://api.kontist.com/api/accounts/{account_id}/transactions/{transaction_id}</code></p>
 <h1 id='sepa-credit-transfers'>SEPA Credit Transfers</h1>
-<p>The flow of  SEPA credit transfers (wire transfers) is a 2-step process, divided into 2 requests</p>
+<p>The flow of SEPA credit transfers (wire transfers) is a 2-step process, divided into 2 requests</p>
 
 <ol>
 <li>Registration of all transaction-relevant data and requesting a TAN</li>
@@ -514,7 +531,7 @@ You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded rep
 </tr>
 <tr>
 <td>note</td>
-<td>yes</td>
+<td>no</td>
 <td>The booking text which will appear on sender&#39;s and recipient&#39;s bank statements</td>
 </tr>
 <tr>
@@ -539,20 +556,20 @@ You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded rep
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmation_required"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"recipient"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Brenner"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE89370400440532013000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for paying my lunch"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"authorizationTokenLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmation_required"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"recipient"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Brenner"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE89370400440532013000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for paying my lunch"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"authorizationTokenLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h2 id='sepa-credit-transfers-confirmation'>SEPA credit transfers Confirmation</h2>
-<p>As you have noticed, the status of the newly created SEPA credit  transfer is being returned as <code>confirmation_required</code> therefore you now need to confirm it with the TAN received on your registered mobile phone number.</p>
+<p>As you have noticed, the status of the newly created SEPA credit transfer is being returned as <code>confirmation_required</code> therefore you now need to confirm it with the TAN received on your registered mobile phone number.</p>
 
 <aside class="notice">
 In addition to the TAN, refered to as <code>authorizationToken</code>, you are required to provide the exact same payload which you provided when requesting the TAN.
@@ -574,18 +591,186 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"recipient"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Brenner"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE89370400440532013000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1250</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for paying my lunch"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"authorizationTokenLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"recipient"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Karl Brenner"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE89370400440532013000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1250</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"note"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thank you for paying my lunch"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"authorizationTokenLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre><h1 id='timed-orders'>Timed orders</h1>
+<p>A timed order is a regular SEPA Credit Transfer which is pre-authorized to be executed once at a specific date.</p>
+
+<p>The flow of timed orders is a 2-step process, divided into 2 requests:</p>
+
+<ol>
+<li>Registration of all transaction-relevant data and requesting a TAN</li>
+<li>Confirmation of the previously registered transfer with the received TAN</li>
+</ol>
+<h2 id='timed-order-creation'>Timed order creation</h2>
+<p>In order to create a timed order you need at least the following data</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Mandatory</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>recipient</td>
+<td>yes</td>
+<td>The name of the recipient</td>
+</tr>
+<tr>
+<td>iban</td>
+<td>yes</td>
+<td>Recipient&#39;s IBAN</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>yes</td>
+<td>The transaction amount in Euro-Cents</td>
+</tr>
+<tr>
+<td>date</td>
+<td>yes</td>
+<td>The transaction execution time</td>
+</tr>
+<tr>
+<td>note</td>
+<td>no</td>
+<td>The booking text which will appear on sender&#39;s and recipient&#39;s bank statements</td>
+</tr>
+<tr>
+<td>e2eId</td>
+<td>no</td>
+<td>An optional end-to-end ID such as an invoice ID or booking reference</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/timed-orders"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -d <span class="s1">'{
+    "recipient": "John Smith",
+    "iban": "DE33100110012626008537",
+    "amount": 12012,
+    "note": "Bill payment",
+    "e2eId": null,
+    "date": "2019-08-27T14:32:08.604Z"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9939482a-b1a2-4cff-8b48-ae340e398659"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"execute_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-27T12:00:00.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"executed_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CONFIRMATION_REQUIRED"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"scheduled_transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"04775196-a148-45ca-8f59-e3bb260a3f38"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reference"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R-0230af41c289989f97715193772e229f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bill payment"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE33100110012626008537"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"end_to_end_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-0230af41c289989f97715193772e229f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"batch_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-26T14:32:11.426Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12012</span><span class="p">,</span><span class="w"> </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cents"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='timed-order-confirmation'>Timed order confirmation</h2>
+<p>As you have noticed, the status of the newly created SEPA credit transfer is being returned as <code>CONFIRMATION_REQUIRED</code> therefore you now need to confirm it with the TAN received on your registered mobile phone number.</p>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/confirm"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -d <span class="s1">'{ "token":"931434" }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9939482a-b1a2-4cff-8b48-ae340e398659"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"execute_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-27T12:00:00.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"executed_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SCHEDULED"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"scheduled_transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"04775196-a148-45ca-8f59-e3bb260a3f38"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reference"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R-0230af41c289989f97715193772e229f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bill payment"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE33100110012626008537"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"end_to_end_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-0230af41c289989f97715193772e229f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"batch_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-26T14:32:11.426Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12012</span><span class="p">,</span><span class="w"> </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cents"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h2 id='timed-order-cancelation'>Timed order cancelation</h2>
+<p>To cancel timed order in <code>SCHEDULED</code> state:</p>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/cancel"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  -X PATCH
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9939482a-b1a2-4cff-8b48-ae340e398659"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"execute_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-27T12:00:00.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"executed_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CANCELED"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"scheduled_transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"04775196-a148-45ca-8f59-e3bb260a3f38"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"canceled"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reference"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R-496ef67d09d9f725e66810d15336b595"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bill payment"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE33100110012626008537"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipient_bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"end_to_end_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-496ef67d09d9f725e66810d15336b595"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"batch_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-26T14:39:41.699Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12012</span><span class="p">,</span><span class="w"> </span><span class="s2">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cents"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Timed order will not be displayed anymore in fetch timed orders response.</p>
+<h2 id='fetch-timed-orders'>Fetch timed orders</h2>
+<p>To fetch list of timed order in <code>SCHEDULED</code> state:</p>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.kontist.com/api/accounts/4711/timed-orders"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9939482a-b1a2-4cff-8b48-ae340e398659"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipientName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"recipientIban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE33100110012626008537"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-27T12:00:00.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"purpose"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bill payment"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">-12012</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"e2eId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"E-d447d47fb16d5e0dffe7c7894cc643cf"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TIMED_ORDER"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
 </span></code></pre><h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
