@@ -104,6 +104,153 @@ curl -X DELETE \
 
 You can access Kontist API endpoints by adding `Authorization`: `Bearer AUTH_TOKEN` header to your requests.
 
+## Device Binding
+
+To have access to Kontist API endpoints that require strong customer authentication, you need to pass two-factor authentication (2FA).
+
+To make it seamless for you we provide device binding authentication that leverages digital signature algorithm.
+
+To pass device binding authentication you need to generate a pair of private and public keys by using elliptic curve algorithm  (secp256r1). To create and verify your device you need to pass your public key and then sign OTP from SMS received on your phone.
+
+After that, you can use your device id and your private key to get your confirmed auth token by creating and verifying device challenge.
+
+### Create device
+
+To initiate the device binding you need to create a device. After a successful request, you will receive an SMS with OTP that you will need during device verification.
+
+```shell
+curl "https://api.kontist.com/api/user/devices" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+        "name": "iPhone XS",
+        "key": "0402e86575939cd541f016b69b1bc6ee97736f7a6d32c0ad375695ffdc03acf21a3b54224fd164ad6f9cfdfb42b74f49f3d34a41f95d62e893be4977c7ec154f29"
+      }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "deviceId": "4e310a55-1b1a-4efb-b9a5-fd04491bdd21",
+  "challengeId": "4e310a55-1b1a-4efb-b9a5-fd04491bdd21"
+}
+```
+
+#### HTTP Request
+
+`POST https://api.kontist.com/api/user/devices`
+
+#### Request body
+
+| Parameter | Mandatory | Description                                                                    |
+| --------- | --------- | ------------------------------------------------------------------------------ |
+| name      | yes       | The name of the device                                                         |
+| key       | yes       | The hex-encoded, raw, public key                                               |
+
+#### Response
+| Field       | Description                                                                    |
+| ----------- | ------------------------------------------------------------------------------ |
+| deviceId    | ID of the device                                                               |
+| challengeId | ID of the challenge                                                            |
+
+### Verify device
+
+To verify device you need to provide a signature of OTP received on your mobile phone.
+
+```shell
+curl "https://api.kontist.com/api/user/devices/4e310a55-1b1a-4efb-b9a5-fd04491bdd21/verify" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+        "challengeId": "4e310a55-1b1a-4efb-b9a5-fd04491bdd21",
+        "signature": "30440220220B71BA03178A43B6CFA766F1B520CA1A626777F76B21253F9EC5039F4A0EB3022043CF2685C8F695F434862EADD1D5F5D6F68C29E875F755D058070A71E8338E11"
+      }'
+```
+
+> The above command returns `204 No Content` in case of success.
+
+#### HTTP Request
+
+`POST https://api.kontist.com/api/user/devices/{device_id}/verify`
+
+#### Request body
+
+| Parameter   | Mandatory | Description                                                                    |
+| ----------- | --------- | ------------------------------------------------------------------------------ |
+| challengeId | yes       | ID of the challenge recieved during device creation                            |
+| signature   | yes       | The hex-encoded, raw signature for the OTP recived in SMS                      |
+
+### Create device challenge
+
+After the device is created and verified, you need to create a device challenge. As a response, you will receive `stringToSign` that should be used during verification of device challenge.
+
+```shell
+curl "https://api.kontist.com/api/user/devices/4e310a55-1b1a-4efb-b9a5-fd04491bdd21/challenges" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -X POST
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "5f7c36e2-e0bf-4755-8376-ac6d0711192e",
+  "stringToSign": "9e2d45df-9b00-49d3-9064-29b86374fe67"
+}
+```
+
+#### HTTP Request
+
+`POST https://api.kontist.com/api/user/devices/{device_id}/challenges`
+
+#### Response
+| Field         | Description                                                                    |
+| ------------- | ------------------------------------------------------------------------------ |
+| id            | ID of the challenge                                                            |
+| stringToSign  | Challenge string that should be signed by device private key                   |
+
+
+### Verify device challenge
+
+To verify device challenge you need to provide a signature of `stringToSign` received after challenge creation.
+
+```shell
+curl "https://api.kontist.com/api/user/devices/4e310a55-1b1a-4efb-b9a5-fd04491bdd21/challenges/5f7c36e2-e0bf-4755-8376-ac6d0711192e/verify" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+        "signature": "FF93DF062DB808E35AB9D28D80E0B261C7313C69785471954C05A474156BA7A7F07F2F0E7E805513754A8119BBF172E1E6D0103901249CE8DE012E5E61FDA36AD06405341043"
+      }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ODNjNTc4ZS01M2QwLTRhYmEtOTBiNC02MmRmZmFkNTE5NTMiLCJzY29wZSI6ImF1dGgiLCJjbmYiOnsia2lkIjoiMmExNjRlYzYtZTJkNC00OTI4LTk5NDItZDU5YWI2Yzc4ZDU5In0sImlhdCI6MTU2NzQwOTExNSwiZXhwIjoxNTY3NDEyNzE1fQ.m35NDpQMAB5DMebXUxEzWupP3i-iAwoyVy2sGF1zp_8"
+}
+```
+
+
+#### HTTP Request
+
+`POST https://api.kontist.com/api/user/devices/{device_id}/challenges/{challenge_id}/verify`
+
+#### Request body
+
+| Parameter   | Mandatory | Description                                                                    |
+| ----------- | --------- | ------------------------------------------------------------------------------ |
+| signature   | yes       | The hex-encoded, raw signature for the `stingToSign`                           |
+
+#### Response
+| Field         | Description                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| token         | Auth token with confirmation claim that should be used for endpoints that require strong customer authentication |
+
 # Bank Accounts
 
 The Bank account endpoint returns all customer owned bank accounts including their balances
