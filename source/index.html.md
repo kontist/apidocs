@@ -147,7 +147,7 @@ curl "https://api.kontist.com/api/user/devices" \
 | Parameter | Mandatory | Description                                                                    |
 | --------- | --------- | ------------------------------------------------------------------------------ |
 | name      | yes       | The name of the device                                                         |
-| key       | yes       | The hex-encoded, raw, public key                                               |
+| key       | yes       | The hex-encoded public key without header                                      |
 
 #### Response
 | Field       | Description                                                                    |
@@ -181,7 +181,7 @@ curl "https://api.kontist.com/api/user/devices/4e310a55-1b1a-4efb-b9a5-fd04491bd
 | Parameter   | Mandatory | Description                                                                    |
 | ----------- | --------- | ------------------------------------------------------------------------------ |
 | challengeId | yes       | ID of the challenge recieved during device creation                            |
-| signature   | yes       | The hex-encoded, raw signature for the OTP recived in SMS                      |
+| signature   | yes       | The hex-encoded signature for the OTP recived in SMS                           |
 
 ### Create device challenge
 
@@ -244,7 +244,7 @@ curl "https://api.kontist.com/api/user/devices/4e310a55-1b1a-4efb-b9a5-fd04491bd
 
 | Parameter   | Mandatory | Description                                                                    |
 | ----------- | --------- | ------------------------------------------------------------------------------ |
-| signature   | yes       | The hex-encoded, raw signature for the `stingToSign`                           |
+| signature   | yes       | The hex-encoded signature for the `stingToSign`                                |
 
 #### Response
 | Field         | Description                                                                                                      |
