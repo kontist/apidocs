@@ -116,7 +116,11 @@ After that, you can use your device id and your private key to get your confirme
 
 ### Create device
 
-To initiate the device binding you need to create a device. After a successful request, you will receive an SMS with OTP that you will need during device verification.
+To initiate the device binding you need to create a device by providing your **public key**.
+
+Please, make sure that you **never share your private key** and it's stored in a secure place.
+
+After a successful request, you will receive an SMS with OTP that you will need during device verification.
 
 ```shell
 curl "https://api.kontist.com/api/user/devices" \
