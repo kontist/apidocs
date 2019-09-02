@@ -248,7 +248,7 @@ curl "https://api.kontist.com/api/user/devices/4e310a55-1b1a-4efb-b9a5-fd04491bd
 
 | Parameter   | Mandatory | Description                                                                    |
 | ----------- | --------- | ------------------------------------------------------------------------------ |
-| signature   | yes       | The hex-encoded signature for the `stingToSign`                                |
+| signature   | yes       | The hex-encoded signature for the `stringToSign`                                |
 
 #### Response
 | Field         | Description                                                                                                      |
