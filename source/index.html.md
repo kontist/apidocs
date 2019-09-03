@@ -110,7 +110,7 @@ To have access to Kontist API endpoints that require strong customer authenticat
 
 To make it seamless for you we provide device binding authentication that leverages digital signature algorithm.
 
-To pass device binding authentication you need to generate a pair of private and public keys by using elliptic curve algorithm  (secp256r1). To create and verify your device you need to pass your public key and then sign OTP from SMS received on your phone.
+To pass device binding authentication you need to generate a pair of private and public keys by using elliptic curve algorithm (secp256r1). To create and verify your device you need to pass your public key and then sign OTP from SMS received on your phone.
 
 After that, you can use your device id and your private key to get your confirmed auth token by creating and verifying device challenge.
 
