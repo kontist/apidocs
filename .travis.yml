@@ -7,5 +7,7 @@ matrix:
       name: Deploy
       before_script:
         - bundle install
+        - git config credential.helper "store --file=.git/credentials"
+        - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
       script: "./deploy.sh"
-      if: branch IN (master, autodeploy) AND type = push
+      if: branch IN (master) AND type = push
