@@ -1,10 +1,11 @@
-sudo: false
-
-language: ruby
-
-rvm:
-  - 2.3.3
-  - 2.4.0
-
-cache: bundler
-script: bundle exec middleman build
+matrix:
+  include:
+    - stage: deploy
+      language: ruby
+      rvm:
+        - 2.4.0
+      name: Deploy
+      before_script:
+        - bundle install
+      script: "./deploy.sh"
+      if: branch IN (master, autodeploy) AND type = push
