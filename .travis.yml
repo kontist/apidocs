@@ -1,10 +1,13 @@
-sudo: false
-
-language: ruby
-
-rvm:
-  - 2.3.3
-  - 2.4.0
-
-cache: bundler
-script: bundle exec middleman build
+matrix:
+  include:
+    - stage: deploy
+      language: ruby
+      rvm:
+        - 2.4.0
+      name: Deploy
+      before_script:
+        - bundle install
+        - git config credential.helper "store --file=.git/credentials"
+        - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
+      script: "./deploy.sh"
+      if: branch IN (master) AND type = push
