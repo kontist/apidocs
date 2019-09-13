@@ -365,6 +365,249 @@ curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd5
 }
 ```
 
+# Standing orders
+
+A standing order is a SEPA Credit Transfer executed at regular intervals specified by the initiator.
+
+The flow of standing orders is a 2-step process, divided into 2 requests:
+
+1. Registration of all transaction-relevant data and requesting a TAN
+2. Confirmation of the previously registered transfer with the received TAN
+
+## Standing order creation
+
+In order to create a standing order you need at least the following data
+
+| Parameter           | Mandatory | Description                                                                         |
+| ------------------- | --------- | ----------------------------------------------------------------------------------- |
+| recipient           | yes       | The name of the recipient                                                           |
+| iban                | yes       | Recipient's IBAN                                                                    |
+| amount              | yes       | The transaction amount in Euro-Cents                                                |
+| reoccurrence        | yes       | Interval of transactions (`MONTHLY`, `QUARTERLY`, `EVERY_SIX_MONTHS` or `ANNUALLY`) |
+| firstExecutionDate  | yes       | Execution date of the first transaction                                             |
+| lastExecutionDate   | no        | The date until which iterations will be repeated                                    |
+| note                | no        | The booking text which will appear on sender's and recipient's bank statements      |
+| e2eId               | no        | An optional end-to-end ID such as an invoice ID or booking reference                |
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "recipient": "John Smith",
+    "iban": "DE33100110012626008537",
+    "amount": 12012,
+    "note": "Regular payment",
+    "e2eId": null,
+    "reoccurrence": "MONTHLY",
+    "firstExecutionDate": "2019-08-27T14:32:08.604Z",
+    "lastExecutionDate": null
+  }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "requestId": "92bf42e2eb6405f3a61babab43d623b1",
+  "status": "CONFIRMATION_REQUIRED",
+  "amount": 12012,
+  "recipient": "John Smith",
+  "iban": "DE33100110012626008537",
+  "e2eId": null
+}
+```
+
+## Standing order confirmation
+
+As you have noticed, the status of the newly created SEPA credit transfer is being returned as `CONFIRMATION_REQUIRED` therefore you now need to confirm it with the TAN received on your registered mobile phone number.
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "requestId": "92bf42e2eb6405f3a61babab43d623b1",
+    "authorizationToken": "749245"
+  }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 20,
+  "status": "ACTIVE",
+  "name": "John Smith",
+  "iban": "DE33100110012626008537",
+  "amount": 12012,
+  "description": "Regular payment",
+  "lastExecutionDate": null,
+  "reoccurrence": "MONTHLY",
+  "e2eId": "E-81359c56883b508cc891b2d466983e3a",
+  "nextOccurrence": "2019-08-27T00:00:00.000+00:00"
+}
+```
+
+## Standing order update
+
+You can update following attributes of `ACTIVE` standing order:
+- `amount`
+- `note`
+- `e2eId`
+- `reoccurrence`
+- `lastExecutionDate`
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders/20" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X PATCH \
+  -d '{
+    "amount": 500,
+    "note": "Updated standing order",
+    "reoccurrence": "QUARTERLY",
+    "e2eId": "123456789",
+    "lastExecutionDate": "2022-12-31T20:11:02.109Z"
+  }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "requestId": "1568357736285",
+  "status": "CONFIRMATION_REQUIRED",
+  "amount": 500,
+  "recipient": "John Smith",
+  "iban": "DE33100110012626008537",
+  "e2eId": "123456789"
+}
+```
+
+You need to confirm update of a standing order with the TAN received on your registered mobile phone number in the same way as creation of new standign order:
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "requestId": "1568357736285",
+    "authorizationToken": "123953"
+  }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 20,
+  "status": "ACTIVE",
+  "iban": "DE33100110012626008537",
+  "name": "John Smith",
+  "description": "Updated standing order",
+  "amount": 500,
+  "lastExecutionDate": "2022-12-31T20:11:02.109+00:00",
+  "e2eId": "123456789",
+  "reoccurrence": "QUARTERLY",
+  "nextOccurrence": "2019-08-27T00:00:00.000+00:00"
+}
+```
+
+## Standing order cancelation
+
+To cancel standing order you need to make following request:
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders/20/cancel" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X PATCH
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "requestId": "1568357935921",
+  "status": "CONFIRMATION_REQUIRED"
+}
+```
+
+As you have noticed, standing order cancelation should be confirmed as well:
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "requestId": "1568357935921",
+    "authorizationToken": "472948"
+  }'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 20,
+  "status": "CANCELED",
+  "iban": "DE33100110012626008537",
+  "name": "John Smith",
+  "description": "Updated standing order",
+  "amount": 500,
+  "lastExecutionDate": "2022-12-31T20:11:02.109+00:00",
+  "e2eId": "123456789",
+  "reoccurrence": "QUARTERLY",
+  "nextOccurrence": "2019-08-27T00:00:00.000+00:00"
+}
+```
+
+## Fetch standing orders
+
+Following endpoint allows you to fetch all of your standing orders:
+
+```shell
+curl "https://api.kontist.com/api/accounts/4711/standing-orders" \
+  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Content-Type: application/json"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+    "id": 20,
+    "status": "CANCELED",
+    "iban": "DE33100110012626008537",
+    "name": "John Smith",
+    "description": "Updated standing order",
+    "amount": 500,
+    "lastExecutionDate": "2022-12-31T20:11:02.109+00:00",
+    "e2eId": "123456789",
+    "reoccurrence": "QUARTERLY",
+    "nextOccurrence": "2019-08-27T00:00:00.000+00:00"
+  },
+  {
+    "id": 6,
+    "status": "ACTIVE",
+    "iban": "DE35120300001012765235",
+    "name": "John Doe",
+    "description": "Donation",
+    "amount": 100,
+    "lastExecutionDate": null,
+    "e2eId": "E-f36e4f7e16f95f5960ec9fe00d3c00502",
+    "reoccurrence": "MONTHLY",
+    "nextOccurrence": "2019-10-01T00:00:00.000+00:00"
+  }
+]
+```
+
 # Timed orders
 
 A timed order is a regular SEPA Credit Transfer which is pre-authorized to be executed once at a specific date.
