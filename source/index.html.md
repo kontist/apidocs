@@ -143,7 +143,7 @@ _When parsing the API result, please do not forget that you will receive a list 
 
 ```shell
 curl "https://api.kontist.com/api/accounts/"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8"
 ```
 
 > The above command returns JSON structured like this:
@@ -176,7 +176,7 @@ The transactions endpoint allows you to fetch all of your booked and unbooked ba
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8"
   -H "Accept: application/vnd.kontist.transactionlist.v2.1+json"
 ```
 
@@ -260,7 +260,7 @@ This endpoint retrieves all transactions of the authenticated user.
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8"
 ```
 
 > The above command returns JSON structured like this:
@@ -317,7 +317,7 @@ In order to create a credit transfer you need at least the following data
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -357,7 +357,7 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PUT \
   -d '{
@@ -414,7 +414,7 @@ In order to create a standing order you need at least the following data
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -448,7 +448,7 @@ As you have noticed, the status of the newly created SEPA credit transfer is bei
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -485,7 +485,7 @@ You can update following attributes of `ACTIVE` standing order:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/20" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PATCH \
   -d '{
@@ -514,7 +514,7 @@ You need to confirm update of a standing order with the TAN received on your reg
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -546,7 +546,7 @@ To cancel standing order you need to make following request:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/20/cancel" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PATCH
 ```
@@ -564,7 +564,7 @@ As you have noticed, standing order cancelation should be confirmed as well:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -596,7 +596,7 @@ Following endpoint allows you to fetch all of your standing orders:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json"
 ```
 
@@ -655,7 +655,7 @@ In order to create a timed order you need at least the following data
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -698,7 +698,7 @@ As you have noticed, the status of the newly created SEPA credit transfer is bei
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{ "token":"931434" }'
@@ -734,7 +734,7 @@ To cancel timed order in `SCHEDULED` state:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/cancel" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PATCH
 ```
@@ -771,7 +771,7 @@ To fetch list of timed order in `SCHEDULED` state:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json"
 ```
 
