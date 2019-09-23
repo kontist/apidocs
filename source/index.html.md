@@ -65,16 +65,20 @@ https://your-application/callback?code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&
 
 You can now create a request in the backend to exchange the code into an access token.
 
-```http
-POST https://api.kontist.com/api/oauth/token
-Content-Type: application/x-www-form-urlencoded
-
-grant_type=authorization_code&code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&client_id=78b5c170-a600-4193-978c-e6cb3018dba9&client_secret=my-secret&redirect_uri=https://your-application/callback
+```shell
+curl https://api.kontist.com/api/oauth/token \
+  -X POST \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -d grant_type=authorization_code \
+  -d code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406 \
+  -d client_id=78b5c170-a600-4193-978c-e6cb3018dba9 \
+  -d client_secret=my-secret \
+  -d redirect_uri=https://your-application/callback
 ```
 
 This request needs to contain the client secret and should be done from your backend and not in the frontend to keep the secret confidential.
 
-The result is a JSON object which will look like this:
+> The result is a JSON object which will look like this:
 
 ```json
 {
@@ -86,25 +90,28 @@ The result is a JSON object which will look like this:
 }
 ```
 
-Extract the "access_token" and use it in your requests by adding `Authorization`: `Bearer access_token` header to your requests.
+Extract the `access_token` and use it in your requests by adding the `Authorization: Bearer access_token` header to your requests.
 See this example:
-```http
-GET https://api.kontist.com/api/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0
-````
+```shell
+curl https://api.kontist.com/api/user \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0'
+```
 
 ## Refresh Token
 The access token obtained in the previous section does expire after some time. If you did specify the "offline" scope you can use the `refresh_token` from the first response to create a new access token.
 
 
-```http
-POST https://api.kontist.com/api/oauth/token
-Content-Type: application/x-www-form-urlencoded
-
-grant_type=refresh_token&client_id=78b5c170-a600-4193-978c-e6cb3018dba9&client_secret=my-secret&refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6InJlZnJlc2ggb2ZmbGluZSIsImNsaWVudF9pZCI6Ijc4YjVjMTcwLWE2MDAtNDE5My05NzhjLWU2Y2IzMDE4ZGJhOSIsImlhdCI6MTU2OTIyNjcwOSwiZXhwIjoxNTY5MjMzOTA5fQ.GggO8EQznEH70PTRvicEYxj40oF_RQdHZlJw0jf41xQ
+```shell
+curl https://api.kontist.com/api/oauth/token \
+  -X POST \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -d grant_type=refresh_token \
+  -d client_id=78b5c170-a600-4193-978c-e6cb3018dba9 \
+  -d client_secret=my-secret \
+  -d refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6InJlZnJlc2ggb2ZmbGluZSIsImNsaWVudF9pZCI6Ijc4YjVjMTcwLWE2MDAtNDE5My05NzhjLWU2Y2IzMDE4ZGJhOSIsImlhdCI6MTU2OTIyNjcwOSwiZXhwIjoxNTY5MjMzOTA5fQ.GggO8EQznEH70PTRvicEYxj40oF_RQdHZlJw0jf41xQ
 ```
 
-Response is again a JSON object, similar to the original one:
+> Response is again a JSON object, similar to the original one:
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY5MTksImV4cCI6MTU2OTIzMDUxOX0.CkxIJ2OmXMovqhJhNjQJvI7FMlSMdFTRgheWYTcLMUQ",
@@ -118,13 +125,13 @@ You can use the refresh token multiple times until the refresh token expires its
 
 
 ## Scopes
-* offline (required for refresh token)
-* accounts
-* users
-* transactions
-* transfers
-* subscriptions
-* statements
+- offline (required for refresh token)
+- accounts
+- users
+- transactions
+- transfers
+- subscriptions
+- statements
 
 
 # Bank Accounts
