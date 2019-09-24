@@ -26,7 +26,7 @@ The second part is obtained through the user and can be done in several ways, he
 ## Authorization Code
 In general, the process looks like this:
 1. You redirect the user in a browser to an url on our end.
-2. The user is required to login and needs to accept your applications authorization request. The browser redirects back to your application with a `code` parameter.
+2. The user is required to login and needs to accept your application's authorization request. The browser redirects back to your application with a `code` parameter.
 3. Your application can then exchange this `code` together with the `client_secret` into an `access_token` through a backend request to our API.
 
 Let us go through the process step by step. At first we need to send the user to a special url in the browser:
@@ -40,7 +40,7 @@ Adjust the parameters like this:
 | scope | space delimited list of scopes your application is going to access. Please see the list below.|
 | response_type | Set fixed as "code". |
 | client_id | This is your client id you got from us. Do not include the secret here.|
-| redirect_uri | This is your applications callback url which is bound to your client id.|
+| redirect_uri | This is your application's callback url which is bound to your client id.|
 | state | Can be used to verify our response. You can put in anything here and we will send it back to your application. |later.
 
 
