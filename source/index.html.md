@@ -41,7 +41,7 @@ Adjust the parameters like this:
 | response_type | Set fixed as "code". |
 | client_id | This is your client id you got from us. Do not include the secret here.|
 | redirect_uri | This is your application's callback url which is bound to your client id.|
-| state | Can be used to verify our response. You can put in anything here and we will send it back to your application. |later.
+| state | Can be used to verify our response. You can put in anything here and we will send it back to your application later.
 
 
 ### Response case 1: The user denied giving access to your application:
