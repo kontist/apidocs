@@ -25,19 +25,20 @@ The second part is obtained through the user and can be done in several ways, he
 
 ## Authorization Code
 In general, the process looks like this:
+
 1. You redirect the user in a browser to an url on our end.
 2. The user is required to login and needs to accept your application's authorization request. The browser redirects back to your application with a `code` parameter.
 3. Your application can then exchange this `code` together with the `client_secret` into an `access_token` through a backend request to our API.
 
 Let us go through the process step by step. At first we need to send the user to a special url in the browser:
-```http
-https://api.kontist.com/api/oauth/authorize?scope=offline&response_type=code&client_id=78b5c170-a600-4193-978c-e6cb3018dba9&redirect_uri=https://your-application/callback&state=OPAQUE_VALUE
-```
+
+`https://api.kontist.com/api/oauth/authorize?scope=offline&response_type=code&client_id=78b5c170-a600-4193-978c-e6cb3018dba9&redirect_uri=https://your-application/callback&state=OPAQUE_VALUE`
 
 Adjust the parameters like this:
+
 | Parameter | Description |
 | --------- | ----------- |
-| scope | space delimited list of scopes your application is going to access. Please see the list below.|
+| scope | Space delimited list of scopes your application is going to access. Please see the list below.|
 | response_type | Set fixed as "code". |
 | client_id | This is your client id you got from us. Do not include the secret here.|
 | redirect_uri | This is your application's callback url which is bound to your client id.|
@@ -46,22 +47,18 @@ Adjust the parameters like this:
 
 ### Response case 1: The user denied giving access to your application:
 
-The browser is being redirected to this url:
+The browser is being redirected to your url with an error parameter attached.
 
-```http
-https://your-application/callback?state=OPAQUE_VALUE&error=%7B%22type%22%3A%22AccessDeniedError%22%7D
-```
+`https://your-application/callback?state=OPAQUE_VALUE&error=%7B%22type%22%3A%22AccessDeniedError%22%7D`
 
 Your application might then inform the user that you can not continue without granting access.
 
 
 ### Response case 2: The user accepted giving access to your application:
 
-The browser is being redirected to this url:
+The browser is being redirected to your url with a code parameter attached.
 
-```http
-https://your-application/callback?code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&state=OPAQUE_VALUE
-```
+`https://your-application/callback?code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&state=OPAQUE_VALUE`
 
 You can now create a request in the backend to exchange the code into an access token.
 
@@ -76,7 +73,9 @@ curl https://api.kontist.com/api/oauth/token \
   -d redirect_uri=https://your-application/callback
 ```
 
-This request needs to contain the client secret and should be done from your backend and not in the frontend to keep the secret confidential.
+<aside class="notice">
+  This request needs to contain the client secret and should be done from your backend and not in the frontend to keep the secret confidential.
+</aside>
 
 > The result is a JSON object which will look like this:
 
@@ -90,8 +89,9 @@ This request needs to contain the client secret and should be done from your bac
 }
 ```
 
-Extract the `access_token` and use it in your requests by adding the `Authorization: Bearer access_token` header to your requests.
+> Extract the `access_token` and use it in your requests by adding the `Authorization: Bearer access_token` header to your requests.
 See this example:
+
 ```shell
 curl https://api.kontist.com/api/user \
   -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0'
@@ -112,6 +112,7 @@ curl https://api.kontist.com/api/oauth/token \
 ```
 
 > Response is again a JSON object, similar to the original one:
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY5MTksImV4cCI6MTU2OTIzMDUxOX0.CkxIJ2OmXMovqhJhNjQJvI7FMlSMdFTRgheWYTcLMUQ",
