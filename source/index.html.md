@@ -20,7 +20,7 @@ Welcome to the Kontist API. Kontist allows you to access your own bank transacti
 # Authentication
 To manage the data via our API your application needs to gain access on behalf of the user. This is done through obtaining an access token via [OAuth2](https://tools.ietf.org/html/rfc6749). The access token must then be send in each request in the HTTP header like this: "Authorization: Bearer TOKEN".
 
-You need two kinds of credentials to get such a token: The first part is a fixed pair of client id and client secret. They identify your client application which connects to the API. Each application has its own pair of client id and secret, please contact us via developer@kontist.com to get your own client credentials.
+You need two kinds of credentials to get such a token: The first part is a fixed pair of client id and client secret. They identify your client application which connects to the API. Each application has its own pair of client id and secret, please contact us via [developer@kontist.com](mailto:developer@kontist.com) to get your own client credentials.
 The second part is obtained through the user and can be done in several ways, here we describe the preferred way through the "Authorization Code" grant type.
 
 ## Authorization Code
