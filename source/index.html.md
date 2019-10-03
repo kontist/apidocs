@@ -18,91 +18,121 @@ search: true
 Welcome to the Kontist API. Kontist allows you to access your own bank transaction data as well as the initiation and authentication of financial transactions. Please note, that you will still need to confirm the latter with an individual authorization code which you will receive through SMS.
 
 # Authentication
+To manage the data via our API your application needs to gain access on behalf of the user. This is done through obtaining an access token via [OAuth2](https://tools.ietf.org/html/rfc6749). The access token must then be send in each request in the HTTP header like this: "Authorization: Bearer TOKEN".
 
-You can start playing with the Kontist API using [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). However this is not to be used in production as it is highly rate limited. The documentation of our oAuth flow is in preparation and will be added at a later point in time.
+You need two kinds of credentials to get such a token: The first part is a fixed pair of client id and client secret. They identify your client application which connects to the API. Each application has its own pair of client id and secret, please contact us via developer@kontist.com to get your own client credentials.
+The second part is obtained through the user and can be done in several ways, here we describe the preferred way through the "Authorization Code" grant type.
 
-`Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l`
+## Authorization Code
+In general, the process looks like this:
+1. You redirect the user in a browser to an url on our end.
+2. The user is required to login and needs to accept your application's authorization request. The browser redirects back to your application with a `code` parameter.
+3. Your application can then exchange this `code` together with the `client_secret` into an `access_token` through a backend request to our API.
 
-<aside class="notice">
-You must replace <code>QWxhZGRpbjpPcGVuU2VzYW1l</code> with a base64-encoded representation of <code>your_username:your_password</code>.
-</aside>
-
-## JWT auth
-
-You can read more about JWT token auth under [https://jwt.io/introduction](https://jwt.io/introduction).
-
-To start using JWT auth you have to first create refresh token or auth token. Refresh token would be used next to create auth token. Auth token is valid for a specified amount of time. After it expires you should issue new auth token via refresh token.
-
-### Create refresh token
-
-To create refresh token (valid for `30 days`) you would have to use:
-
-```shell
-curl -X POST \
-  https://api.kontist.com/api/user/refresh-token \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "email": "YOUR_EMAIL",
-  "password": "YOUR_PASSWORD"
-}'
+Let us go through the process step by step. At first we need to send the user to a special url in the browser:
+```http
+https://api.kontist.com/api/oauth/authorize?scope=offline&response_type=code&client_id=78b5c170-a600-4193-978c-e6cb3018dba9&redirect_uri=https://your-application/callback&state=OPAQUE_VALUE
 ```
 
-If your credentials are valid, you should receive refresh token in JSON response:
+Adjust the parameters like this:
+| Parameter | Description |
+| --------- | ----------- |
+| scope | space delimited list of scopes your application is going to access. Please see the list below.|
+| response_type | Set fixed as "code". |
+| client_id | This is your client id you got from us. Do not include the secret here.|
+| redirect_uri | This is your application's callback url which is bound to your client id.|
+| state | Can be used to verify our response. You can put in anything here and we will send it back to your application later.
+
+
+### Response case 1: The user denied giving access to your application:
+
+The browser is being redirected to this url:
+
+```http
+https://your-application/callback?state=OPAQUE_VALUE&error=%7B%22type%22%3A%22AccessDeniedError%22%7D
+```
+
+Your application might then inform the user that you can not continue without granting access.
+
+
+### Response case 2: The user accepted giving access to your application:
+
+The browser is being redirected to this url:
+
+```http
+https://your-application/callback?code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&state=OPAQUE_VALUE
+```
+
+You can now create a request in the backend to exchange the code into an access token.
+
+```shell
+curl https://api.kontist.com/api/oauth/token \
+  -X POST \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -d grant_type=authorization_code \
+  -d code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406 \
+  -d client_id=78b5c170-a600-4193-978c-e6cb3018dba9 \
+  -d client_secret=my-secret \
+  -d redirect_uri=https://your-application/callback
+```
+
+This request needs to contain the client secret and should be done from your backend and not in the frontend to keep the secret confidential.
+
+> The result is a JSON object which will look like this:
 
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjYxYjIyZC01NzRmLTQwOWMtYjRlYy03ZmJhOTQ1ZGYwYjkiLCJzY29wZSI6InJlZnJlc2giLCJpYXQiOjE1NTg0NTM5MzUsImV4cCI6MTU2MTA0NTkzNX0.jXGbFGKxGciGGwNXhgJz6R0nd_swniBHFSOul6V4kjY"
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6InJlZnJlc2ggb2ZmbGluZSIsImNsaWVudF9pZCI6Ijc4YjVjMTcwLWE2MDAtNDE5My05NzhjLWU2Y2IzMDE4ZGJhOSIsImlhdCI6MTU2OTIyNjcwOSwiZXhwIjoxNTY5MjMzOTA5fQ.GggO8EQznEH70PTRvicEYxj40oF_RQdHZlJw0jf41xQ",
+  "scope": "offline"
 }
 ```
 
-### Create auth token
-
-To create authToken (valid for exactly `1 hour`):
-
+Extract the `access_token` and use it in your requests by adding the `Authorization: Bearer access_token` header to your requests.
+See this example:
 ```shell
-curl -X POST \
-  https://api.kontist.com/api/user/auth-token \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "email": "YOUR_EMAIL",
-  "password": "YOUR_PASSWORD"
-}'
+curl https://api.kontist.com/api/user \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0'
 ```
 
-### Create auth token using refresh token
+## Refresh Token
+The access token obtained in the previous section does expire after some time. If you did specify the "offline" scope you can use the `refresh_token` from the first response to create a new access token.
 
-You can also create authToken using refresh token:
-
-```shell
-curl -X POST \
-  https://api.kontist.com/api/user/auth-token \
-  -H 'Authorization: Bearer REFRESH_TOKEN' \
-  -H 'Content-Type: application/json'
-```
-
-It's usable when your access token gets invalid and you would like to get a new one without prompting the user for credentials again.
-
-### Auth token invalidation
-
-If you would like to invalidate token before it expires, you would have to use:
 
 ```shell
-curl -X DELETE \
-  https://api.kontist.com/api/user/auth-token \
-  -H 'Authorization: Bearer ACCESS_TOKEN'
+curl https://api.kontist.com/api/oauth/token \
+  -X POST \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -d grant_type=refresh_token \
+  -d client_id=78b5c170-a600-4193-978c-e6cb3018dba9 \
+  -d client_secret=my-secret \
+  -d refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6InJlZnJlc2ggb2ZmbGluZSIsImNsaWVudF9pZCI6Ijc4YjVjMTcwLWE2MDAtNDE5My05NzhjLWU2Y2IzMDE4ZGJhOSIsImlhdCI6MTU2OTIyNjcwOSwiZXhwIjoxNTY5MjMzOTA5fQ.GggO8EQznEH70PTRvicEYxj40oF_RQdHZlJw0jf41xQ
 ```
 
-### Refresh token invalidation
-
-Same works for refresh token:
-
-```shell
-curl -X DELETE \
-  https://api.kontist.com/api/user/refresh-token \
-  -H 'Authorization: Bearer ACCESS_TOKEN'
+> Response is again a JSON object, similar to the original one:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY5MTksImV4cCI6MTU2OTIzMDUxOX0.CkxIJ2OmXMovqhJhNjQJvI7FMlSMdFTRgheWYTcLMUQ",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "scope": "offline"
+}
 ```
 
-You can access Kontist API endpoints by adding `Authorization`: `Bearer AUTH_TOKEN` header to your requests.
+You can use the refresh token multiple times until the refresh token expires itself and you need to go through the process again.
+
+
+## Scopes
+- offline (required for refresh token)
+- accounts
+- users
+- transactions
+- transfers
+- subscriptions
+- statements
+
 
 # Bank Accounts
 
@@ -120,7 +150,7 @@ _When parsing the API result, please do not forget that you will receive a list 
 
 ```shell
 curl "https://api.kontist.com/api/accounts/"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8"
 ```
 
 > The above command returns JSON structured like this:
@@ -153,7 +183,7 @@ The transactions endpoint allows you to fetch all of your booked and unbooked ba
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8"
   -H "Accept: application/vnd.kontist.transactionlist.v2.1+json"
 ```
 
@@ -237,7 +267,7 @@ This endpoint retrieves all transactions of the authenticated user.
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transactions/905800"
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l"
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8"
 ```
 
 > The above command returns JSON structured like this:
@@ -294,7 +324,7 @@ In order to create a credit transfer you need at least the following data
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -334,7 +364,7 @@ In addition to the TAN, refered to as <code>authorizationToken</code>, you are r
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/transfer/f55641811042b9e85989bd57c3718346ctrx" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PUT \
   -d '{
@@ -391,7 +421,7 @@ In order to create a standing order you need at least the following data
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -425,7 +455,7 @@ As you have noticed, the status of the newly created SEPA credit transfer is bei
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -462,7 +492,7 @@ You can update following attributes of `ACTIVE` standing order:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/20" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PATCH \
   -d '{
@@ -491,7 +521,7 @@ You need to confirm update of a standing order with the TAN received on your reg
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -523,7 +553,7 @@ To cancel standing order you need to make following request:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/20/cancel" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PATCH
 ```
@@ -541,7 +571,7 @@ As you have noticed, standing order cancelation should be confirmed as well:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -573,7 +603,7 @@ Following endpoint allows you to fetch all of your standing orders:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/standing-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json"
 ```
 
@@ -632,7 +662,7 @@ In order to create a timed order you need at least the following data
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -675,7 +705,7 @@ As you have noticed, the status of the newly created SEPA credit transfer is bei
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/confirm" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{ "token":"931434" }'
@@ -711,7 +741,7 @@ To cancel timed order in `SCHEDULED` state:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders/9939482a-b1a2-4cff-8b48-ae340e398659/cancel" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json" \
   -X PATCH
 ```
@@ -748,7 +778,7 @@ To fetch list of timed order in `SCHEDULED` state:
 
 ```shell
 curl "https://api.kontist.com/api/accounts/4711/timed-orders" \
-  -H "Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l" \
+  -H "Authorization: Bearer eyJ0eXAiOiJK...TkM8" \
   -H "Content-Type: application/json"
 ```
 
