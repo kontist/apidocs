@@ -318,36 +318,61 @@
 <h1 id='authentication'>Authentication</h1>
 <p>To manage the data via our API your application needs to gain access on behalf of the user. This is done through obtaining an access token via <a href="https://tools.ietf.org/html/rfc6749">OAuth2</a>. The access token must then be send in each request in the HTTP header like this: &quot;Authorization: Bearer TOKEN&quot;.</p>
 
-<p>You need two kinds of credentials to get such a token: The first part is a fixed pair of client id and client secret. They identify your client application which connects to the API. Each application has its own pair of client id and secret, please contact us via developer@kontist.com to get your own client credentials.
+<p>You need two kinds of credentials to get such a token: The first part is a fixed pair of client id and client secret. They identify your client application which connects to the API. Each application has its own pair of client id and secret, please contact us via <a href="mailto:developer@kontist.com">developer@kontist.com</a> to get your own client credentials.
 The second part is obtained through the user and can be done in several ways, here we describe the preferred way through the &quot;Authorization Code&quot; grant type.</p>
 <h2 id='authorization-code'>Authorization Code</h2>
-<p>In general, the process looks like this:
-1. You redirect the user in a browser to an url on our end.
-2. The user is required to login and needs to accept your application&#39;s authorization request. The browser redirects back to your application with a <code>code</code> parameter.
-3. Your application can then exchange this <code>code</code> together with the <code>client_secret</code> into an <code>access_token</code> through a backend request to our API.</p>
+<p>In general, the process looks like this:</p>
 
-<p>Let us go through the process step by step. At first we need to send the user to a special url in the browser:
-<code>http
-https://api.kontist.com/api/oauth/authorize?scope=offline&amp;response_type=code&amp;client_id=78b5c170-a600-4193-978c-e6cb3018dba9&amp;redirect_uri=https://your-application/callback&amp;state=OPAQUE_VALUE
-</code></p>
+<ol>
+<li>You redirect the user in a browser to an url on our end.</li>
+<li>The user is required to login and needs to accept your application&#39;s authorization request. The browser redirects back to your application with a <code>code</code> parameter.</li>
+<li>Your application can then exchange this <code>code</code> together with the <code>client_secret</code> into an <code>access_token</code> through a backend request to our API.</li>
+</ol>
 
-<p>Adjust the parameters like this:
-| Parameter | Description |
-| --------- | ----------- |
-| scope | space delimited list of scopes your application is going to access. Please see the list below.|
-| response_type | Set fixed as &quot;code&quot;. |
-| client_id | This is your client id you got from us. Do not include the secret here.|
-| redirect_uri | This is your application&#39;s callback url which is bound to your client id.|
-| state | Can be used to verify our response. You can put in anything here and we will send it back to your application later.</p>
+<p>Let us go through the process step by step. At first we need to send the user to a special url in the browser:</p>
+
+<p><code>https://api.kontist.com/api/oauth/authorize?scope=offline&amp;response_type=code&amp;client_id=78b5c170-a600-4193-978c-e6cb3018dba9&amp;redirect_uri=https://your-application/callback&amp;state=OPAQUE_VALUE</code></p>
+
+<p>Adjust the parameters like this:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>scope</td>
+<td>Space delimited list of scopes your application is going to access. Please see the list below.</td>
+</tr>
+<tr>
+<td>response_type</td>
+<td>Set fixed as &quot;code&quot;.</td>
+</tr>
+<tr>
+<td>client_id</td>
+<td>This is your client id you got from us. Do not include the secret here.</td>
+</tr>
+<tr>
+<td>redirect_uri</td>
+<td>This is your application&#39;s callback url which is bound to your client id.</td>
+</tr>
+<tr>
+<td>state</td>
+<td>Can be used to verify our response. You can put in anything here and we will send it back to your application later.</td>
+</tr>
+</tbody></table>
 <h3 id='response-case-1-the-user-denied-giving-access-to-your-application'>Response case 1: The user denied giving access to your application:</h3>
-<p>The browser is being redirected to this url:</p>
-<pre class="highlight http tab-http"><code><span class="err">https://your-application/callback?state=OPAQUE_VALUE&amp;error=%7B%22type%22%3A%22AccessDeniedError%22%7D
-</span></code></pre>
+<p>The browser is being redirected to your url with an error parameter attached.</p>
+
+<p><code>https://your-application/callback?state=OPAQUE_VALUE&amp;error=%7B%22type%22%3A%22AccessDeniedError%22%7D</code></p>
+
 <p>Your application might then inform the user that you can not continue without granting access.</p>
 <h3 id='response-case-2-the-user-accepted-giving-access-to-your-application'>Response case 2: The user accepted giving access to your application:</h3>
-<p>The browser is being redirected to this url:</p>
-<pre class="highlight http tab-http"><code><span class="err">https://your-application/callback?code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&amp;state=OPAQUE_VALUE
-</span></code></pre>
+<p>The browser is being redirected to your url with a code parameter attached.</p>
+
+<p><code>https://your-application/callback?code=59f53e7cfcf12f1d36e2fb56bb46b8d116fb8406&amp;state=OPAQUE_VALUE</code></p>
+
 <p>You can now create a request in the backend to exchange the code into an access token.</p>
 <pre class="highlight shell tab-shell"><code>curl https://api.kontist.com/api/oauth/token <span class="se">\</span>
   -X POST <span class="se">\</span>
@@ -358,7 +383,9 @@ https://api.kontist.com/api/oauth/authorize?scope=offline&amp;response_type=code
   -d <span class="nv">client_secret</span><span class="o">=</span>my-secret <span class="se">\</span>
   -d <span class="nv">redirect_uri</span><span class="o">=</span>https://your-application/callback
 </code></pre>
-<p>This request needs to contain the client secret and should be done from your backend and not in the frontend to keep the secret confidential.</p>
+<aside class="notice">
+  This request needs to contain the client secret and should be done from your backend and not in the frontend to keep the secret confidential.
+</aside>
 
 <blockquote>
 <p>The result is a JSON object which will look like this:</p>
@@ -371,13 +398,13 @@ https://api.kontist.com/api/oauth/authorize?scope=offline&amp;response_type=code
   </span><span class="s2">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offline"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<blockquote>
 <p>Extract the <code>access_token</code> and use it in your requests by adding the <code>Authorization: Bearer access_token</code> header to your requests.
-See this example:
-<code>shell
-curl https://api.kontist.com/api/user \
-  -H &#39;authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0&#39;
-</code></p>
-<h2 id='refresh-token'>Refresh Token</h2>
+See this example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl https://api.kontist.com/api/user <span class="se">\</span>
+  -H <span class="s1">'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY3MDksImV4cCI6MTU2OTIzMDMwOX0.XwkfN1jJ_0C5gSIlzvOHRovmbzbpOXRpZ6HCOg1I7j0'</span>
+</code></pre><h2 id='refresh-token'>Refresh Token</h2>
 <p>The access token obtained in the previous section does expire after some time. If you did specify the &quot;offline&quot; scope you can use the <code>refresh_token</code> from the first response to create a new access token.</p>
 <pre class="highlight shell tab-shell"><code>curl https://api.kontist.com/api/oauth/token <span class="se">\</span>
   -X POST <span class="se">\</span>
@@ -388,17 +415,15 @@ curl https://api.kontist.com/api/user \
   -d <span class="nv">refresh_token</span><span class="o">=</span>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6InJlZnJlc2ggb2ZmbGluZSIsImNsaWVudF9pZCI6Ijc4YjVjMTcwLWE2MDAtNDE5My05NzhjLWU2Y2IzMDE4ZGJhOSIsImlhdCI6MTU2OTIyNjcwOSwiZXhwIjoxNTY5MjMzOTA5fQ.GggO8EQznEH70PTRvicEYxj40oF_RQdHZlJw0jf41xQ
 </code></pre>
 <blockquote>
-<p>Response is again a JSON object, similar to the original one:
-<code>json
-{
-  &quot;access_token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY5MTksImV4cCI6MTU2OTIzMDUxOX0.CkxIJ2OmXMovqhJhNjQJvI7FMlSMdFTRgheWYTcLMUQ&quot;,
-  &quot;token_type&quot;: &quot;Bearer&quot;,
-  &quot;expires_in&quot;: 3599,
-  &quot;scope&quot;: &quot;offline&quot;
-}
-</code></p>
+<p>Response is again a JSON object, similar to the original one:</p>
 </blockquote>
-
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NzIyODljMy1hNDk4LTQzMDItYjk3My1hNDRlYzdjZDRmZTMiLCJzY29wZSI6Im9mZmxpbmUiLCJjbGllbnRfaWQiOiI3OGI1YzE3MC1hNjAwLTQxOTMtOTc4Yy1lNmNiMzAxOGRiYTkiLCJpYXQiOjE1NjkyMjY5MTksImV4cCI6MTU2OTIzMDUxOX0.CkxIJ2OmXMovqhJhNjQJvI7FMlSMdFTRgheWYTcLMUQ"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">3599</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offline"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>You can use the refresh token multiple times until the refresh token expires itself and you need to go through the process again.</p>
 <h2 id='scopes'>Scopes</h2>
 <ul>
